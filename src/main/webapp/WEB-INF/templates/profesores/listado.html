@@ -1,0 +1,242 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>BIENVENIDO A SISTEMA UNIVERSITARIO</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+            }
+            #un_div { display : none; }
+            table {
+                border:1px solid black;
+                border-collapse:separate;
+                border-spacing:5px;
+                width:400px;
+                height:auto;
+            }
+            tr.color {
+                background-color:#525151;
+            }
+            th, td {
+                border:1px solid black;
+                padding:5px;
+            }
+
+            #navi {  
+                list-style:none;
+            }
+            #navi li {
+                margin:2px;
+                padding:2px;
+            }
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="../css/bootstrap-theme.css" type="text/css"/>
+
+
+        <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+
+                    <a class="navbar-brand" href="#">SEU</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <form class="navbar-form navbar-right" role="form" method="POST">
+                        <fieldset>  
+                            <div class="form-group">
+
+                                <input type="text" placeholder="Email" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" placeholder="Password" class="form-control">
+                            </div>
+
+
+
+                            <button type="submit" class="btn btn-success">Ingresar</button>
+                        </fieldset>
+                    </form>
+
+                    <div  id="un_div">
+                        {{#if error }}
+                        {{ error }}
+                        {{/if}}
+                    </div> 
+
+
+                </div>
+            </div><!--/.navbar-collapse -->
+
+        </nav>
+
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <div class="container">
+                <h1>Hola! Bienvenido a nuestra plataforma</h1>
+                <p>En SEU te ofrecemos una completa estructura académica, acompañada de los mejores servicios para alcanzar la excelencia y el éxito profesional.
+
+                    Contamos con Acreditación Institucional de alta calidad, otorgada por el Ministerio de Educación Nacional. Galardonada por el Gobierno Nacional con la Orden a la Educación Superior y a la Fe Pública ‘Luis López de Mesa’ en seis ocasiones en reconocimiento a la acreditación de sus programas.</p>
+                <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Example row of columns -->
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>Listado ingresados</h2>
+                    <ul id="navi">
+                        <li><a class="btn btn-primary btn-lg" role="button" href="/usuarios/listado">Listado de usuarios</a></li>
+                        <li><a class="btn btn-primary btn-lg" role="button" href="/listaMateria/listado">Listado de materias</a></li>
+                        <li><a class="btn btn-primary btn-lg" role="button" href="/profesores/listado">Listado de profesores</a></li>
+                        <li><a class="btn btn-primary btn-lg" role="button" href="/alumnos/listado">Listado de estudiantes</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <form id="form-categoria">
+                        <fieldset>
+                            <legend>Datos del Profesor</legend>
+                            <div>
+                                <label>Código: <input type="text" name="codigo"></label>
+                            </div>
+                            <div>
+                                <label>Nombre: <input type="text" name="nombre"></label>
+                            </div>
+                            <div>
+                                <label>Apellido: <input type="text" name="apellido"></label>
+                            </div>
+                            <div>
+                                <button type="submit">Guardar</button>
+                            </div>
+                        </fieldset>
+                    </form>
+
+
+                </div>
+                <div class="col-md-4">
+                    <table id="table-profesores">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+            <hr>
+
+            <footer>
+                <p>&copy; Company 2015</p>
+            </footer>
+        </div>
+        <script src="/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript">
+var idProfesor = 0;
+
+function llenarTabla() {
+    $.ajax({
+        url: '/api/profesor',
+        type: 'GET'
+    }).done(function (data) {
+        var tbody = $('#table-profesor tbody');
+        tbody.empty();
+        $.each(data, function (i, prof) {
+            var tr = $('<tr>');
+            var td_codigo = $('<td>');
+            td_codigo.html(prof.codigo);
+            var td_nombre = $('<td>>');
+            td_nombre.html(prof.nombre);
+            var td_apellido = $('<td>');
+            td_apellido.html(prof.apellido);
+            var td_acciones = $('<td>');
+            var a_editar = $('<a href="#">Editar</a>');
+            a_editar.on('click', function (event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/api/profesores/' + idProfesor.id,
+                    type: 'GET'
+                }).done(function (data) {
+                    idProfesor = data.id;
+                    $('input[name="codigo"]').val(data.codigo);
+                    $('input[name="nombre"]').val(data.nombre);
+                    $('input[name="apellido"]').val(data.apellido);
+                });
+            });
+            td_acciones.append(a_editar);
+            td_acciones.append(' ');
+            var a_eliminar = $('<a href="#">Eliminar</a>');
+            a_eliminar.on('click', function (event) {
+                event.preventDefault();
+                if (confirm("Esta seguro de que desea eliminar el Profesor?")) {
+                    $.ajax({
+                        url: '/api/profesores/' + idProfesor.id,
+                        type: 'DELETE'
+                    }).done(function () {
+                        llenarTabla();
+                    });
+                }
+            });
+            td_acciones.append(a_eliminar);
+            tr.append(td_codigo);
+            tr.append(td_nombre);
+            tr.append(td_apellido);
+            tr.append(td_acciones);
+            tbody.append(tr);
+        });
+    });
+}
+$(document).ready(function () {
+    llenarTabla();
+});
+$('#form-profesor').on('submit', function (event) {
+    event.preventDefault();
+    var datos = $(this).serialize();
+
+    var url = (idProfesor === 0) ? '/api/profesores' : '/api/profesores/' + idProfesor;
+    var type = (idProfesor === 0) ? 'POST' : 'PUT';
+
+    $.ajax({
+        url: url,
+        data: datos,
+        type: type
+    }).done(function () {
+        alert('El Profesor fue registrado correctamente');
+        $('input[name="codigo"]').val("");
+        $('input[name="nombre"]').val("");
+        $('input[name="apellido"]').val("");
+        idProfesor = 0;
+        llenarTabla();
+    }).fail(function () {
+        alert('No se pudo registrar');
+    });
+});
+        </script>
+
+    </body>
+</html>
